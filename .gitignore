@@ -35,7 +35,7 @@ migrate_working_dir/
 /backend/node_modules/
 # Symbolication related
 app.*.symbols
-
+/backend/.env
 # Obfuscation related
 app.*.map.json
 
