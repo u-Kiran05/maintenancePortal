@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
 import '../styles/login_style.dart';
 import '../styles/app_colors.dart';
+import '../utils/user_session.dart';
 
 class EmployeeLoginScreen extends StatefulWidget {
   @override
@@ -11,7 +12,6 @@ class EmployeeLoginScreen extends StatefulWidget {
 class _EmployeeLoginScreenState extends State<EmployeeLoginScreen> {
   final TextEditingController _employeeIdController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
   String _feedbackMessage = '';
   IconData? _feedbackIcon;
   bool _isLoading = false;
@@ -38,6 +38,7 @@ class _EmployeeLoginScreenState extends State<EmployeeLoginScreen> {
     try {
       final status = await AuthService.login(empId, password);
       if (status == 'Y') {
+        UserSession.setEmpId(empId);
         Navigator.pushReplacementNamed(context, '/dashboard');
       } else {
         setState(() {
@@ -69,10 +70,7 @@ class _EmployeeLoginScreenState extends State<EmployeeLoginScreen> {
             children: [
               const Icon(Icons.engineering, size: 60, color: Colors.blueAccent),
               const SizedBox(height: 10),
-
-              // ✅ No const here because the style is not compile-time constant
               Text("Maintenance Engineer Login", style: LoginStyles.titleText),
-
               const SizedBox(height: 20),
               TextField(
                 controller: _employeeIdController,
