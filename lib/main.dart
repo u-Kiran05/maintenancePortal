@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'routes/app_routes.dart'; // Route definitions
+import 'routes/app_routes.dart'; // Contains the generateRoute function
 
 void main() {
   runApp(MaintenanceApp());
@@ -11,7 +11,7 @@ class MaintenanceApp extends StatelessWidget {
     return MaterialApp(
       title: 'SAP Maintenance Portal',
       initialRoute: '/',
-      routes: appRoutes, // Defined in app_routes.dart
+      onGenerateRoute: generateRoute, // <-- use this
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blueGrey,

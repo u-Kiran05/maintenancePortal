@@ -6,7 +6,7 @@ const cors = require('cors');
 
 const loginRoute = require('./routes/login');
 const notificationsRoute = require('./routes/notifications');
-
+const workordersRoute = require('./routes/workorders');
 const app = express();
 const PORT = 5000;
 
@@ -15,6 +15,7 @@ app.use(bodyParser.json());
 
 app.use('/api/login', loginRoute);
 app.use('/api/notifications', notificationsRoute);
+app.use('/api/workorders', workordersRoute);
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
