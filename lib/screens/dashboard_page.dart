@@ -4,7 +4,8 @@ import '../styles/app_colors.dart';
 import '../utils/user_session.dart';
 import 'notifications_page.dart';
 import 'workorder_page.dart';
-
+import 'dashboard2.dart';
+import 'package:maintenance_portal/styles/app_colors.dart';
 class DashboardPage extends StatefulWidget {
   final String empId;
 
@@ -24,6 +25,7 @@ class _DashboardPageState extends State<DashboardPage> with SingleTickerProvider
   void initState() {
     super.initState();
     _pages = [
+      MaintenanceDashboard(),
       NotificationsPage(empId: widget.empId),
       WorkOrderPage(empId: widget.empId),
       const SizedBox(), // Logout placeholder
@@ -45,9 +47,35 @@ class _DashboardPageState extends State<DashboardPage> with SingleTickerProvider
   }
 
   void _onItemTapped(int index) async {
-    if (index == 2) {
-      await UserSession.clear();
-      Navigator.pushReplacementNamed(context, '/');
+    if (index == 3) {
+      final shouldLogout = await showDialog<bool>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Confirm Logout'),
+          content: Text('Are you sure you want to logout?'),
+          backgroundColor: AppColors.white,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          actions: [
+            TextButton(
+              child: Text('Cancel', style: TextStyle(color: AppColors.primaryRed)),
+              onPressed: () => Navigator.of(context).pop(false),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primaryRed,
+                foregroundColor: AppColors.white,
+              ),
+              child: Text('Logout'),
+              onPressed: () => Navigator.of(context).pop(true),
+            ),
+          ],
+        ),
+      );
+
+      if (shouldLogout == true) {
+        await UserSession.clear();
+        Navigator.pushReplacementNamed(context, '/');
+      }
     } else {
       setState(() {
         _selectedIndex = index;
@@ -57,11 +85,14 @@ class _DashboardPageState extends State<DashboardPage> with SingleTickerProvider
     }
   }
 
+
   String _getAppBarTitle(int index) {
     switch (index) {
       case 0:
-        return 'Notifications';
+        return 'Overview';
       case 1:
+        return 'Notifications';
+      case 2:
         return 'Work Orders';
       default:
         return '';
@@ -71,7 +102,7 @@ class _DashboardPageState extends State<DashboardPage> with SingleTickerProvider
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _selectedIndex == 2
+      appBar: _selectedIndex == 3
           ? null
           : AppBar(
         title: Row(
@@ -146,6 +177,18 @@ class _DashboardPageState extends State<DashboardPage> with SingleTickerProvider
           ),
           onTap: _onItemTapped,
           items: [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.dashboard_customize, size: 28),
+              activeIcon: Container(
+                padding: const EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  color: AppColors.primaryRed.withOpacity(0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(Icons.dashboard_customize, size: 28),
+              ),
+              label: 'Overview',
+            ),
             BottomNavigationBarItem(
               icon: Icon(Icons.notifications, size: 28),
               activeIcon: Container(
